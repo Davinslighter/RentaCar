@@ -1,19 +1,65 @@
 {
   "name": "server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "rentacar server",
-  "main": "src/index.js",
+  "keywords": [
+    "loopback-application",
+    "loopback"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=10.16"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "lb-tsc",
+    "build:watch": "lb-tsc --watch",
+    "lint": "npm run prettier:check",
+    "lint:fix": "npm run prettier:fix",
+    "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "pretest": "npm run rebuild",
+    "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
+    "posttest": "npm run lint",
+    "test:dev": "lb-mocha --allow-console-logs dist/__tests__/**/*.js && npm run posttest",
+    "docker:build": "docker build -t server .",
+    "docker:run": "docker run -p 3000:3000 -d server",
+    "premigrate": "npm run build",
+    "migrate": "node ./dist/migrate",
+    "preopenapi-spec": "npm run build",
+    "openapi-spec": "node ./dist/openapi-spec",
+    "prestart": "npm run rebuild",
+    "start": "node -r source-map-support/register .",
+    "clean": "lb-clean dist *.tsbuildinfo .eslintcache",
+    "rebuild": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Davinslighter/RentaCar.git"
+    "url": ""
   },
-  "author": "D4",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Davinslighter/RentaCar/issues"
+  "author": " D4",
+  "license": "",
+  "files": [
+    "README.md",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "dependencies": {
+    "@loopback/boot": "^3.4.4",
+    "@loopback/core": "^2.18.0",
+    "@loopback/repository": "^3.7.3",
+    "@loopback/rest": "^10.1.0",
+    "@loopback/rest-explorer": "^3.3.4",
+    "@loopback/service-proxy": "^3.2.4",
+    "tslib": "^2.0.0"
   },
-  "homepage": "https://github.com/Davinslighter/RentaCar#readme"
+  "devDependencies": {
+    "@loopback/build": "^7.0.2",
+    "source-map-support": "^0.5.20",
+    "@loopback/testlab": "^3.4.4",
+    "@types/node": "^10.17.60",
+    "typescript": "~4.4.4"
+  }
 }
