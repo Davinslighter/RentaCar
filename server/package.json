@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "0.0.1",
-  "description": "rentacar server",
+  "description": "rentacar server with loopback",
   "keywords": [
     "loopback-application",
     "loopback"
@@ -14,6 +14,13 @@
   "scripts": {
     "build": "lb-tsc",
     "build:watch": "lb-tsc --watch",
+    "lint": "npm run eslint && npm run prettier:check",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix",
+    "prettier:cli": "lb-prettier \"**/*.ts\" \"**/*.js\"",
+    "prettier:check": "npm run prettier:cli -- -l",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "eslint": "lb-eslint --report-unused-disable-directives .",
+    "eslint:fix": "npm run eslint -- --fix",
     "pretest": "npm run rebuild",
     "test": "lb-mocha --allow-console-logs \"dist/__tests__\"",
     "posttest": "npm run lint",
@@ -33,7 +40,7 @@
     "type": "git",
     "url": ""
   },
-  "author": " D4",
+  "author": " <mc102579@gmail.com>",
   "license": "",
   "files": [
     "README.md",
@@ -48,13 +55,16 @@
     "@loopback/rest": "^10.1.0",
     "@loopback/rest-explorer": "^3.3.4",
     "@loopback/service-proxy": "^3.2.4",
+    "loopback-connector-mongodb": "^5.6.0",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
     "@loopback/build": "^7.0.2",
-    "source-map-support": "^0.5.20",
+    "@loopback/eslint-config": "^11.0.2",
     "@loopback/testlab": "^3.4.4",
     "@types/node": "^10.17.60",
+    "eslint": "^7.32.0",
+    "source-map-support": "^0.5.20",
     "typescript": "~4.4.4"
   }
 }
