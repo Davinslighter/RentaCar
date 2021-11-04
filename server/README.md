@@ -1,60 +1,62 @@
-# server
+# RentaCar
+servidor
 
-This application is generated using [LoopBack 4 CLI](https://loopback.io/doc/en/lb4/Command-line-interface.html) with the
-[initial project layout](https://loopback.io/doc/en/lb4/Loopback-application-layout.html).
+### Idiomas
+- 🇪🇸 Español
+- 🇺🇸 [Inglés](./README.en.md)
 
-## Install dependencies
+## Instalar dependencias
 
-By default, dependencies were installed when this application was generated.
-Whenever dependencies in `package.json` are changed, run the following command:
+Por defecto, las dependencias en esta aplicación ya fueron generadas.
+Siempre que las dependencias en `package.json` son cambiadas, corre el siguiente comando: 
 
 ```sh
 npm install
 ```
 
-To only install resolved dependencies in `package-lock.json`:
+Para solo instalar las dependencias resueltas en `package-lock.json`:
 
 ```sh
 npm ci
 ```
 
-## Run the application
+## Correr la aplicación
 
 ```sh
 npm start
 ```
 
-You can also run `node .` to skip the build step.
+También puedes correr `node .` para saltarte la parte de compilación.
 
-Open http://127.0.0.1:3000 in your browser.
+Abre http://127.0.0.1:3000 en tu navegador.
 
-## Rebuild the project
+## Recompilar el proyecto
 
-To incrementally build the project:
+Para compilar incrementalmente el proyecto:
 
 ```sh
 npm run build
 ```
 
-To force a full build by cleaning up cached artifacts:
+Para forzar una compilación completa limpiando los artefacots almacenados en caché:
 
 ```sh
 npm run rebuild
 ```
 
-## Fix code style and formatting issues
+## Corregir problemas de formato y estilo de código
 
 ```sh
 npm run lint
 ```
 
-To automatically fix such issues:
+Para solucionar automáticamente estos problemas:
 
 ```sh
 npm run lint:fix
 ```
 
-## Other useful commands
+## Otros comandos útiles
 
 - `npm run migrate`: Migrate database schemas for models
 - `npm run openapi-spec`: Generate OpenAPI spec into a file
@@ -66,10 +68,3 @@ npm run lint:fix
 ```sh
 npm test
 ```
-
-## What's next
-
-Please check out [LoopBack 4 documentation](https://loopback.io/doc/en/lb4/) to
-understand how you can continue to add features to this application.
-
-[![LoopBack](https://github.com/loopbackio/loopback-next/raw/master/docs/site/imgs/branding/Powered-by-LoopBack-Badge-(blue)-@2x.png)](http://loopback.io/)
