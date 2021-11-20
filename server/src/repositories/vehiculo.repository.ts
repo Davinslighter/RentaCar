@@ -1,8 +1,8 @@
 import {inject, Getter} from '@loopback/core';
 import {DefaultCrudRepository, repository, HasOneRepositoryFactory} from '@loopback/repository';
 import {MongodbDataSource} from '../datasources';
-import {Vehiculo, VehiculoRelations, Asesor} from '../models';
-import {AsesorRepository} from './asesor.repository';
+import {Vehiculo, VehiculoRelations, Lugar} from '../models';
+import {LugarRepository} from './lugar.repository';
 
 export class VehiculoRepository extends DefaultCrudRepository<
   Vehiculo,
@@ -10,13 +10,13 @@ export class VehiculoRepository extends DefaultCrudRepository<
   VehiculoRelations
 > {
 
-  public readonly asesor: HasOneRepositoryFactory<Asesor, typeof Vehiculo.prototype.id>;
+  public readonly lugar: HasOneRepositoryFactory<Lugar, typeof Vehiculo.prototype.id>;
 
   constructor(
-    @inject('datasources.mongodb') dataSource: MongodbDataSource, @repository.getter('AsesorRepository') protected asesorRepositoryGetter: Getter<AsesorRepository>,
+    @inject('datasources.mongodb') dataSource: MongodbDataSource, @repository.getter('LugarRepository') protected lugarRepositoryGetter: Getter<LugarRepository>,
   ) {
     super(Vehiculo, dataSource);
-    this.asesor = this.createHasOneRepositoryFactoryFor('asesor', asesorRepositoryGetter);
-    this.registerInclusionResolver('asesor', this.asesor.inclusionResolver);
+    this.lugar = this.createHasOneRepositoryFactoryFor('lugar', lugarRepositoryGetter);
+    this.registerInclusionResolver('lugar', this.lugar.inclusionResolver);
   }
 }
