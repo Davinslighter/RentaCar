@@ -14,6 +14,12 @@ export class Asesor extends Entity {
     type: 'string',
     required: true,
   })
+  estado: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   nombre: string;
 
   @property({
@@ -25,15 +31,11 @@ export class Asesor extends Entity {
   @property({
     type: 'string',
     required: true,
-    default: 'pendiente',
-    enum: ["asesor", "cancelado", "pendiente"]
   })
-  estado: string;
+  password: string;
 
-  @property({
-    type: 'string',
-  })
-  vehiculoId?: string;
+  @hasMany(() => Vehiculo)
+  vehiculos: Vehiculo[];
 
   constructor(data?: Partial<Asesor>) {
     super(data);

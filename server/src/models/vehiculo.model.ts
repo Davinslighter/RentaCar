@@ -1,5 +1,5 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
-import {Asesor} from './asesor.model';
+import {Lugar} from './lugar.model';
 
 @model()
 export class Vehiculo extends Entity {
@@ -14,31 +14,30 @@ export class Vehiculo extends Entity {
     type: 'boolean',
     required: true,
   })
-  estado: boolean;
+  disponibilidad: boolean;
 
   @property({
     type: 'string',
     required: true,
-    default: 'automóvil',
-    enum: ["bicicleta", "motocicleta", "automóvil", "autobús"]
   })
   tipo: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  marca?: string;
+  marca: string;
+
+  @property({
+    type: 'string',
+  })
+  nombre?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  nombre: string;
-
-  @property({
-    type: 'string',
-  })
-  modelo?: string;
+  modelo: string;
 
   @property({
     type: 'number',
@@ -48,39 +47,18 @@ export class Vehiculo extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
-  color: string;
+  color?: string;
 
   @property({
-    type: 'number',
-    required: true,
+    type: 'boolean',
   })
-  extras: number;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  accesorios: number;
+  extras?: boolean;
 
   @property({
     type: 'string',
-    required: true,
   })
-  id_departamento: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  id_ciudad: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  direccion: string;
+  accesorios?: string;
 
   @property({
     type: 'string',
@@ -103,6 +81,12 @@ export class Vehiculo extends Entity {
     type: 'string',
     required: true,
   })
+  id_lugar: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   id_asesor: string;
 
   @property({
@@ -110,13 +94,13 @@ export class Vehiculo extends Entity {
   })
   asesorId?: string;
 
+  @hasOne(() => Lugar)
+  lugar: Lugar;
+
   @property({
     type: 'string',
   })
   solicitudId?: string;
-
-  @hasOne(() => Asesor)
-  asesor: Asesor;
 
   constructor(data?: Partial<Vehiculo>) {
     super(data);

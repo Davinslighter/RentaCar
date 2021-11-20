@@ -25,6 +25,11 @@ export class Ciudad extends Entity {
   @belongsTo(() => Departamento)
   departamentoId: string;
 
+  @property({
+    type: 'string',
+  })
+  lugarId?: string;
+
   constructor(data?: Partial<Ciudad>) {
     super(data);
   }
