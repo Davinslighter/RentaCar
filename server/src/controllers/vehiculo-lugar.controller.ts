@@ -17,22 +17,22 @@ import {
 } from '@loopback/rest';
 import {
   Vehiculo,
-  Asesor,
+  Lugar,
 } from '../models';
 import {VehiculoRepository} from '../repositories';
 
-export class VehiculoAsesorController {
+export class VehiculoLugarController {
   constructor(
     @repository(VehiculoRepository) protected vehiculoRepository: VehiculoRepository,
   ) { }
 
-  @get('/vehiculos/{id}/asesor', {
+  @get('/vehiculos/{id}/lugar', {
     responses: {
       '200': {
-        description: 'Vehiculo has one Asesor',
+        description: 'Vehiculo has one Lugar',
         content: {
           'application/json': {
-            schema: getModelSchemaRef(Asesor),
+            schema: getModelSchemaRef(Lugar),
           },
         },
       },
@@ -40,16 +40,16 @@ export class VehiculoAsesorController {
   })
   async get(
     @param.path.string('id') id: string,
-    @param.query.object('filter') filter?: Filter<Asesor>,
-  ): Promise<Asesor> {
-    return this.vehiculoRepository.asesor(id).get(filter);
+    @param.query.object('filter') filter?: Filter<Lugar>,
+  ): Promise<Lugar> {
+    return this.vehiculoRepository.lugar(id).get(filter);
   }
 
-  @post('/vehiculos/{id}/asesor', {
+  @post('/vehiculos/{id}/lugar', {
     responses: {
       '200': {
         description: 'Vehiculo model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Asesor)}},
+        content: {'application/json': {schema: getModelSchemaRef(Lugar)}},
       },
     },
   })
@@ -58,22 +58,22 @@ export class VehiculoAsesorController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Asesor, {
-            title: 'NewAsesorInVehiculo',
+          schema: getModelSchemaRef(Lugar, {
+            title: 'NewLugarInVehiculo',
             exclude: ['id'],
             optional: ['vehiculoId']
           }),
         },
       },
-    }) asesor: Omit<Asesor, 'id'>,
-  ): Promise<Asesor> {
-    return this.vehiculoRepository.asesor(id).create(asesor);
+    }) lugar: Omit<Lugar, 'id'>,
+  ): Promise<Lugar> {
+    return this.vehiculoRepository.lugar(id).create(lugar);
   }
 
-  @patch('/vehiculos/{id}/asesor', {
+  @patch('/vehiculos/{id}/lugar', {
     responses: {
       '200': {
-        description: 'Vehiculo.Asesor PATCH success count',
+        description: 'Vehiculo.Lugar PATCH success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
@@ -83,28 +83,28 @@ export class VehiculoAsesorController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(Asesor, {partial: true}),
+          schema: getModelSchemaRef(Lugar, {partial: true}),
         },
       },
     })
-    asesor: Partial<Asesor>,
-    @param.query.object('where', getWhereSchemaFor(Asesor)) where?: Where<Asesor>,
+    lugar: Partial<Lugar>,
+    @param.query.object('where', getWhereSchemaFor(Lugar)) where?: Where<Lugar>,
   ): Promise<Count> {
-    return this.vehiculoRepository.asesor(id).patch(asesor, where);
+    return this.vehiculoRepository.lugar(id).patch(lugar, where);
   }
 
-  @del('/vehiculos/{id}/asesor', {
+  @del('/vehiculos/{id}/lugar', {
     responses: {
       '200': {
-        description: 'Vehiculo.Asesor DELETE success count',
+        description: 'Vehiculo.Lugar DELETE success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
   })
   async delete(
     @param.path.string('id') id: string,
-    @param.query.object('where', getWhereSchemaFor(Asesor)) where?: Where<Asesor>,
+    @param.query.object('where', getWhereSchemaFor(Lugar)) where?: Where<Lugar>,
   ): Promise<Count> {
-    return this.vehiculoRepository.asesor(id).delete(where);
+    return this.vehiculoRepository.lugar(id).delete(where);
   }
 }
