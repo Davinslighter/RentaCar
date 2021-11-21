@@ -26,7 +26,7 @@ export class AsesorController {
     public asesorRepository : AsesorRepository,
   ) {}
 
-  @post('/asesors')
+  @post('/asesores')
   @response(200, {
     description: 'Asesor model instance',
     content: {'application/json': {schema: getModelSchemaRef(Asesor)}},
@@ -47,7 +47,7 @@ export class AsesorController {
     return this.asesorRepository.create(asesor);
   }
 
-  @get('/asesors/count')
+  @get('/asesores/count')
   @response(200, {
     description: 'Asesor model count',
     content: {'application/json': {schema: CountSchema}},
@@ -58,7 +58,7 @@ export class AsesorController {
     return this.asesorRepository.count(where);
   }
 
-  @get('/asesors')
+  @get('/asesores')
   @response(200, {
     description: 'Array of Asesor model instances',
     content: {
@@ -76,7 +76,7 @@ export class AsesorController {
     return this.asesorRepository.find(filter);
   }
 
-  @patch('/asesors')
+  @patch('/asesores')
   @response(200, {
     description: 'Asesor PATCH success count',
     content: {'application/json': {schema: CountSchema}},
@@ -95,7 +95,7 @@ export class AsesorController {
     return this.asesorRepository.updateAll(asesor, where);
   }
 
-  @get('/asesors/{id}')
+  @get('/asesores/{id}')
   @response(200, {
     description: 'Asesor model instance',
     content: {
@@ -111,7 +111,7 @@ export class AsesorController {
     return this.asesorRepository.findById(id, filter);
   }
 
-  @patch('/asesors/{id}')
+  @patch('/asesores/{id}')
   @response(204, {
     description: 'Asesor PATCH success',
   })
@@ -129,7 +129,7 @@ export class AsesorController {
     await this.asesorRepository.updateById(id, asesor);
   }
 
-  @put('/asesors/{id}')
+  @put('/asesores/{id}')
   @response(204, {
     description: 'Asesor PUT success',
   })
@@ -140,7 +140,7 @@ export class AsesorController {
     await this.asesorRepository.replaceById(id, asesor);
   }
 
-  @del('/asesors/{id}')
+  @del('/asesores/{id}')
   @response(204, {
     description: 'Asesor DELETE success',
   })

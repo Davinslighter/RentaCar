@@ -1,3 +1,4 @@
+import { authenticate } from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -26,6 +27,7 @@ export class VehiculoController {
     public vehiculoRepository : VehiculoRepository,
   ) {}
 
+  @authenticate("admin")
   @post('/vehiculos')
   @response(200, {
     description: 'Vehiculo model instance',
@@ -47,6 +49,7 @@ export class VehiculoController {
     return this.vehiculoRepository.create(vehiculo);
   }
 
+  @authenticate.skip()
   @get('/vehiculos/count')
   @response(200, {
     description: 'Vehiculo model count',
@@ -58,6 +61,7 @@ export class VehiculoController {
     return this.vehiculoRepository.count(where);
   }
 
+  @authenticate.skip()
   @get('/vehiculos')
   @response(200, {
     description: 'Array of Vehiculo model instances',
@@ -95,6 +99,8 @@ export class VehiculoController {
     return this.vehiculoRepository.updateAll(vehiculo, where);
   }
 
+
+  @authenticate.skip()
   @get('/vehiculos/{id}')
   @response(200, {
     description: 'Vehiculo model instance',
