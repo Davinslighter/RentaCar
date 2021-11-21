@@ -1,6 +1,6 @@
 import {Entity, model, property, hasOne} from '@loopback/repository';
-import {Departamento} from './departamento.model';
 import {Ciudad} from './ciudad.model';
+import {Departamento} from './departamento.model';
 
 @model()
 export class Lugar extends Entity {
@@ -29,16 +29,16 @@ export class Lugar extends Entity {
   })
   direccion: string;
 
-  @property({
-    type: 'string',
-  })
-  vehiculoId?: string;
+  @hasOne(() => Ciudad)
+  ciudad: Ciudad;
 
   @hasOne(() => Departamento)
   departamento: Departamento;
 
-  @hasOne(() => Ciudad)
-  ciudad: Ciudad;
+  @property({
+    type: 'string',
+  })
+  vehiculoId?: string;
 
   @property({
     type: 'string',

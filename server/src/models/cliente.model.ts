@@ -1,5 +1,6 @@
-import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
+import {Entity, model, property, hasMany, belongsTo, hasOne} from '@loopback/repository';
 import {Solicitud} from './solicitud.model';
+import {Usuario} from './usuario.model';
 import {Lugar} from './lugar.model';
 
 @model()
@@ -12,34 +13,15 @@ export class Cliente extends Entity {
   id?: string;
 
   @property({
-    type: 'string',
-    required: true,
-  })
-  nombre: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  telefono: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  email: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  password: string;
-
-  @property({
     type: 'number',
     required: true,
   })
-  cedula: number;
+  telefono: number;
+
+  @property({
+    type: 'number',
+  })
+  edad?: number;
 
   @property({
     type: 'string',
@@ -49,6 +31,9 @@ export class Cliente extends Entity {
 
   @hasMany(() => Solicitud)
   solicitudes: Solicitud[];
+
+  @belongsTo(() => Usuario)
+  usuarioId: string;
 
   @hasOne(() => Lugar)
   lugar: Lugar;

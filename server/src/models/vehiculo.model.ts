@@ -30,8 +30,9 @@ export class Vehiculo extends Entity {
 
   @property({
     type: 'string',
+    required: true,
   })
-  nombre?: string;
+  nombre: string;
 
   @property({
     type: 'string',
@@ -52,13 +53,21 @@ export class Vehiculo extends Entity {
 
   @property({
     type: 'boolean',
+    required: true,
   })
-  extras?: boolean;
+  extras: boolean;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+  })
+  accesorios?: string[];
 
   @property({
     type: 'string',
+    required: true,
   })
-  accesorios?: string;
+  id_lugar: string;
 
   @property({
     type: 'string',
@@ -81,13 +90,12 @@ export class Vehiculo extends Entity {
     type: 'string',
     required: true,
   })
-  id_lugar: string;
+  id_asesor: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  id_asesor: string;
+  solicitudId?: string;
 
   @property({
     type: 'string',
@@ -96,11 +104,6 @@ export class Vehiculo extends Entity {
 
   @hasOne(() => Lugar)
   lugar: Lugar;
-
-  @property({
-    type: 'string',
-  })
-  solicitudId?: string;
 
   constructor(data?: Partial<Vehiculo>) {
     super(data);

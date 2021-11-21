@@ -1,19 +1,13 @@
 import {Entity, model, property} from '@loopback/repository';
 
 @model()
-export class Tarjeta extends Entity {
+export class Usuario extends Entity {
   @property({
     type: 'string',
     id: true,
     generated: true,
   })
   id?: string;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  numero: number;
 
   @property({
     type: 'string',
@@ -23,29 +17,35 @@ export class Tarjeta extends Entity {
 
   @property({
     type: 'number',
-    required: true,
   })
-  codigo: number;
-
-  @property({
-    type: 'date',
-    required: true,
-  })
-  fecha: string;
+  cedula?: number;
 
   @property({
     type: 'string',
+    required: true,
   })
-  foto?: string;
+  email: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  password: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  rol: string;
 
 
-  constructor(data?: Partial<Tarjeta>) {
+  constructor(data?: Partial<Usuario>) {
     super(data);
   }
 }
 
-export interface TarjetaRelations {
+export interface UsuarioRelations {
   // describe navigational properties here
 }
 
-export type TarjetaWithRelations = Tarjeta & TarjetaRelations;
+export type UsuarioWithRelations = Usuario & UsuarioRelations;
