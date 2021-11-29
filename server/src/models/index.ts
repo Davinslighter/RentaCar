@@ -9,3 +9,4 @@ export * from './ciudad.model';
 export * from './solicitud.model';
 export * from './credenciales.model';
 export * from './clave-olvidada.model';
+export * from './persona.model';

@@ -21,3 +21,4 @@ export * from './vehiculo.controller';
 export * from './lugar.controller';
 export * from './departamento.controller';
 export * from './ciudad.controller';
+export * from './persona.controller';

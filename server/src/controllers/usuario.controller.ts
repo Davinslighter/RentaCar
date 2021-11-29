@@ -16,6 +16,7 @@ import {
   del,
   requestBody,
   response,
+  HttpErrors,
 } from '@loopback/rest';
 import { Llaves } from '../config/llaves';
 import {ClaveOlvidada,Credenciales, Usuario} from '../models';
@@ -53,7 +54,7 @@ export class UsuarioController {
         tk: token
       }
     } else {
-      throw new HttpErrors[401]("Datos inválidos!")
+      throw new HttpErrors[403]("Datos inválidos!")
     }
   }
 
