@@ -1,4 +1,6 @@
 import { authenticate } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { basicAuthorization } from '../services';
 import {
   Count,
   CountSchema,
@@ -27,12 +29,13 @@ export class VehiculoController {
     public vehiculoRepository : VehiculoRepository,
   ) {}
 
-  @authenticate("admin")
   @post('/vehiculos')
   @response(200, {
     description: 'Vehiculo model instance',
     content: {'application/json': {schema: getModelSchemaRef(Vehiculo)}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async create(
     @requestBody({
       content: {
@@ -49,7 +52,6 @@ export class VehiculoController {
     return this.vehiculoRepository.create(vehiculo);
   }
 
-  @authenticate.skip()
   @get('/vehiculos/count')
   @response(200, {
     description: 'Vehiculo model count',
@@ -61,7 +63,6 @@ export class VehiculoController {
     return this.vehiculoRepository.count(where);
   }
 
-  @authenticate.skip()
   @get('/vehiculos')
   @response(200, {
     description: 'Array of Vehiculo model instances',
@@ -85,6 +86,8 @@ export class VehiculoController {
     description: 'Vehiculo PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateAll(
     @requestBody({
       content: {
@@ -99,8 +102,6 @@ export class VehiculoController {
     return this.vehiculoRepository.updateAll(vehiculo, where);
   }
 
-
-  @authenticate.skip()
   @get('/vehiculos/{id}')
   @response(200, {
     description: 'Vehiculo model instance',
@@ -121,6 +122,8 @@ export class VehiculoController {
   @response(204, {
     description: 'Vehiculo PATCH success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -139,6 +142,8 @@ export class VehiculoController {
   @response(204, {
     description: 'Vehiculo PUT success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: ['basicAuthorization']})
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() vehiculo: Vehiculo,
@@ -150,6 +155,8 @@ export class VehiculoController {
   @response(204, {
     description: 'Vehiculo DELETE success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.vehiculoRepository.deleteById(id);
   }

@@ -1,8 +1,14 @@
+import { service, inject } from '@loopback/core';
+import { authenticate, TokenService, UserService } from '@loopback/authentication';
+import { authorize } from '@loopback/authorization';
+import { SecurityBindings, securityId, UserProfile } from '@loopback/security';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
+  model,
+  property,
   repository,
   Where,
 } from '@loopback/repository';
@@ -19,64 +25,63 @@ import {
   HttpErrors,
 } from '@loopback/rest';
 import { Llaves } from '../config/llaves';
-import {ClaveOlvidada,Credenciales, Usuario} from '../models';
+import {CredencialesUsuario, Usuario, ResetPassword} from '../models';
 import {UsuarioRepository} from '../repositories';
-import { AutenticacionService } from '../services';
-import { service } from '@loopback/core';
-
+import { basicAuthorization, JwtService, UserManagementService } from '../services';
 const fetch = require('node-fetch');
 
 export class UsuarioController {
   constructor(
     @repository(UsuarioRepository)
     public usuarioRepository : UsuarioRepository,
-    @service(AutenticacionService)
-    public servicioAutenticacion: AutenticacionService
+    @service(UserManagementService)
+    public usuarioManagement :  UserManagementService,
+    @service(JwtService)
+    public jwtService : JwtService,
   ) {}
 
   @post('/login')
   @response(200, {
-    description: "Identificar usuarios"
+    description: 'Login',
   })
   async login(
-    @requestBody() credenciales: Credenciales
-  ){    
-    let u = await this.servicioAutenticacion.IdentificarUsuario(credenciales.Usuario, credenciales.clave);
-    if(u) {
-      let token = this.servicioAutenticacion.GenerarTokenJWT(u);
-      return{
+    @requestBody() credenciales : CredencialesUsuario
+  ) {
+    let u = await this.usuarioManagement.verificarUsuario(credenciales.usuario, credenciales.password);
+    if (u) {
+      let token = this.jwtService.generarToken(u);
+      return {
         datos: {
-          id: u.id,
           nombre: u.nombre,
           correo: u.email,
-          rol: u.rol
+          id: u.id,
         },
         tk: token
       }
     } else {
-      throw new HttpErrors[403]("Datos inválidos!")
+      throw new HttpErrors[401]("Datos invalidos!");
     }
   }
 
-  // recuperar clave
-  @get("/claveOlvidada")
+  @post('/clave-olvidada')
   @response(200, {
     description: 'Recuperar Clave'
   })
-  async recuperarClave(
-    @requestBody() claveOlvidada: ClaveOlvidada
-  ){
-    let u = await this.servicioAutenticacion.RecuperarClave(claveOlvidada.usuario);
-    if(u) {
+  async claveOlvidada(
+    @requestBody() resetPassword : ResetPassword,
+  ) {
+    let u = await this.usuarioManagement.passwordReset(resetPassword.email);
+    if (u) {
       let destino = u.email;
-      let asunto = "Olvidaste tu contraseña";
-      let contenido = "Hola $(u.nombre), tu contraseña en Rentacar es $(u.password)";
-       fetch(`${Llaves.urlNotificaciones}/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
+      let asunto = 'Recuperar clave!';
+      let contenido = `Hola ${u.nombre}, le recordamos que su contraseña es ${u.password}`;
+      fetch(`${Llaves.urlNotificaciones}/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
         .then((data:any) => {
           console.log(data);
-    })
-    } else{
-      throw new HttpErrors[401]("Datos inválidos!")
+        })
+        return u;
+    } else {
+      throw new HttpErrors[401]("Datos no válidos!");
     }
   }
 
@@ -98,20 +103,19 @@ export class UsuarioController {
     })
     usuario: Omit<Usuario, 'id'>,
   ): Promise<Usuario> {
-
-    let clave = this.servicioAutenticacion.GenerarClave();
-    let claveCifrada = this.servicioAutenticacion.CifrarClave(clave);
-    usuario.password = claveCifrada;
+    usuario.roles = ['cliente'];
+    let password = this.usuarioManagement.generarClave();
+    let crypt = this.usuarioManagement.cifrarClave(password);
+    usuario.password = crypt;
     let u = await this.usuarioRepository.create(usuario);
 
     let destino = usuario.email;
-    let asunto = "Eres parte de Rentacar"
-    let contenido = `Hola ${usuario.nombre}, su usuario para ingresar a rentacar es: ${usuario.email}, y su contraseña será ${clave}`;
+    let asunto = 'Ingreso a Rentacar';
+    let contenido = `Hola ${usuario.nombre}, su nombre de usuario es: ${usuario.email} y su contraseña es: ${password}`;
     fetch(`${Llaves.urlNotificaciones}/envio-correo?correo_destino=${destino}&asunto=${asunto}&contenido=${contenido}`)
-      .then((data:any) => {
+      .then((data: any) => {
         console.log(data);
       })
-
     return u;
   }
 
@@ -164,6 +168,11 @@ export class UsuarioController {
   }
 
   @get('/usuarios/{id}')
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin', 'cliente', 'asesor'],
+    voters: [basicAuthorization]
+  })
   @response(200, {
     description: 'Usuario model instance',
     content: {
@@ -198,14 +207,28 @@ export class UsuarioController {
   }
 
   @put('/usuarios/{id}')
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin', 'cliente'],
+    voters: [basicAuthorization]
+  })
   @response(204, {
     description: 'Usuario PUT success',
   })
   async replaceById(
+    @inject(SecurityBindings.USER)
+    usuarioActual: UserProfile,
     @param.path.string('id') id: string,
     @requestBody() usuario: Usuario,
   ): Promise<void> {
-    await this.usuarioRepository.replaceById(id, usuario);
+    try {
+      if (!usuarioActual.roles.includes('admin')) {
+        delete usuario.roles;
+      }
+      return await this.usuarioRepository.replaceById(id, usuario);
+    } catch (e) {
+      return e;
+    }
   }
 
   @del('/usuarios/{id}')

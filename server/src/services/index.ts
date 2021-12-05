@@ -1,2 +1,3 @@
-export * from './autenticacion.service';
-export * from './notificacion.service';
+export * from './basic.authorizor';
+export * from './jwt.service';
+export * from './user-management.service';

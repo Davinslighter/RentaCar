@@ -1,3 +1,5 @@
+import { authorize } from '@loopback/authorization';
+import { authenticate } from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -19,6 +21,7 @@ import {
 } from '@loopback/rest';
 import {Solicitud} from '../models';
 import {SolicitudRepository} from '../repositories';
+import {basicAuthorization} from '../services';
 
 export class SolicitudController {
   constructor(
@@ -31,6 +34,8 @@ export class SolicitudController {
     description: 'Solicitud model instance',
     content: {'application/json': {schema: getModelSchemaRef(Solicitud)}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente'], voters: [basicAuthorization]})
   async create(
     @requestBody({
       content: {
@@ -52,6 +57,8 @@ export class SolicitudController {
     description: 'Solicitud model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente', 'asesor', 'admin'], voters: [basicAuthorization]})
   async count(
     @param.where(Solicitud) where?: Where<Solicitud>,
   ): Promise<Count> {
@@ -70,6 +77,8 @@ export class SolicitudController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente', 'asesor', 'admin'], voters: [basicAuthorization]})
   async find(
     @param.filter(Solicitud) filter?: Filter<Solicitud>,
   ): Promise<Solicitud[]> {
@@ -144,6 +153,8 @@ export class SolicitudController {
   @response(204, {
     description: 'Solicitud DELETE success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente', 'asesor'], voters: [basicAuthorization]})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.solicitudRepository.deleteById(id);
   }

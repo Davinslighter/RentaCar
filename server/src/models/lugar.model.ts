@@ -1,6 +1,4 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
-import {Ciudad} from './ciudad.model';
-import {Departamento} from './departamento.model';
+import {Entity, model, property} from '@loopback/repository';
 
 @model()
 export class Lugar extends Entity {
@@ -15,13 +13,13 @@ export class Lugar extends Entity {
     type: 'string',
     required: true,
   })
-  id_departamento: string;
+  departamento: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  id_ciudad: string;
+  ciudad: string;
 
   @property({
     type: 'string',
@@ -29,21 +27,10 @@ export class Lugar extends Entity {
   })
   direccion: string;
 
-  @hasOne(() => Ciudad)
-  ciudad: Ciudad;
-
-  @hasOne(() => Departamento)
-  departamento: Departamento;
-
   @property({
     type: 'string',
   })
   vehiculoId?: string;
-
-  @property({
-    type: 'string',
-  })
-  clienteId?: string;
 
   constructor(data?: Partial<Lugar>) {
     super(data);

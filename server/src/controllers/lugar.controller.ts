@@ -1,3 +1,5 @@
+import { authorize } from '@loopback/authorization';
+import { authenticate } from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -19,6 +21,7 @@ import {
 } from '@loopback/rest';
 import {Lugar} from '../models';
 import {LugarRepository} from '../repositories';
+import { basicAuthorization } from '../services';
 
 export class LugarController {
   constructor(
@@ -31,6 +34,8 @@ export class LugarController {
     description: 'Lugar model instance',
     content: {'application/json': {schema: getModelSchemaRef(Lugar)}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async create(
     @requestBody({
       content: {
@@ -52,6 +57,8 @@ export class LugarController {
     description: 'Lugar model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'asesor'], voters: [basicAuthorization]})
   async count(
     @param.where(Lugar) where?: Where<Lugar>,
   ): Promise<Count> {
@@ -70,6 +77,8 @@ export class LugarController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin', 'asesor', 'cliente'], voters: [basicAuthorization]})
   async find(
     @param.filter(Lugar) filter?: Filter<Lugar>,
   ): Promise<Lugar[]> {
@@ -81,6 +90,8 @@ export class LugarController {
     description: 'Lugar PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateAll(
     @requestBody({
       content: {
@@ -115,6 +126,8 @@ export class LugarController {
   @response(204, {
     description: 'Lugar PATCH success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -144,6 +157,8 @@ export class LugarController {
   @response(204, {
     description: 'Lugar DELETE success',
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['admin'], voters: [basicAuthorization]})
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.lugarRepository.deleteById(id);
   }

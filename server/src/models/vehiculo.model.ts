@@ -17,10 +17,11 @@ export class Vehiculo extends Entity {
   disponibilidad: boolean;
 
   @property({
-    type: 'string',
+    type: 'array',
+    itemType: 'string',
     required: true,
   })
-  tipo: string;
+  tipo: string[];
 
   @property({
     type: 'string',
@@ -35,10 +36,9 @@ export class Vehiculo extends Entity {
   nombre: string;
 
   @property({
-    type: 'string',
-    required: true,
+    type: 'number',
   })
-  modelo: string;
+  modelo?: number;
 
   @property({
     type: 'number',
@@ -52,22 +52,16 @@ export class Vehiculo extends Entity {
   color?: string;
 
   @property({
-    type: 'boolean',
-    required: true,
-  })
-  extras: boolean;
-
-  @property({
     type: 'array',
     itemType: 'string',
   })
-  accesorios?: string[];
+  extras?: string[];
 
   @property({
-    type: 'string',
-    required: true,
+    type: 'boolean',
+    default: false,
   })
-  id_lugar: string;
+  accesorios?: boolean;
 
   @property({
     type: 'string',
@@ -90,17 +84,7 @@ export class Vehiculo extends Entity {
     type: 'string',
     required: true,
   })
-  id_asesor: string;
-
-  @property({
-    type: 'string',
-  })
-  solicitudId?: string;
-
-  @property({
-    type: 'string',
-  })
-  asesorId?: string;
+  lugarId: string;
 
   @hasOne(() => Lugar)
   lugar: Lugar;

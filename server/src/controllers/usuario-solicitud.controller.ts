@@ -1,3 +1,5 @@
+import { authorize } from '@loopback/authorization';
+import { authenticate } from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -16,20 +18,21 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {
-  Cliente,
+  Usuario,
   Solicitud,
 } from '../models';
-import {ClienteRepository} from '../repositories';
+import {UsuarioRepository} from '../repositories';
+import { basicAuthorization } from '../services';
 
-export class ClienteSolicitudController {
+export class UsuarioSolicitudController {
   constructor(
-    @repository(ClienteRepository) protected clienteRepository: ClienteRepository,
+    @repository(UsuarioRepository) protected usuarioRepository: UsuarioRepository,
   ) { }
 
-  @get('/clientes/{id}/solicituds', {
+  @get('/usuarios/{id}/solicitudes', {
     responses: {
       '200': {
-        description: 'Array of Cliente has many Solicitud',
+        description: 'Array of Usuario has many Solicitud',
         content: {
           'application/json': {
             schema: {type: 'array', items: getModelSchemaRef(Solicitud)},
@@ -38,46 +41,52 @@ export class ClienteSolicitudController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente', 'asesor'], voters: [basicAuthorization]})
   async find(
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<Solicitud>,
   ): Promise<Solicitud[]> {
-    return this.clienteRepository.solicitudes(id).find(filter);
+    return this.usuarioRepository.solicitudes(id).find(filter);
   }
 
-  @post('/clientes/{id}/solicituds', {
+  @post('/usuarios/{id}/solicitudes', {
     responses: {
       '200': {
-        description: 'Cliente model instance',
+        description: 'Usuario model instance',
         content: {'application/json': {schema: getModelSchemaRef(Solicitud)}},
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente'], voters: [basicAuthorization]})
   async create(
-    @param.path.string('id') id: typeof Cliente.prototype.id,
+    @param.path.string('id') id: typeof Usuario.prototype.id,
     @requestBody({
       content: {
         'application/json': {
           schema: getModelSchemaRef(Solicitud, {
-            title: 'NewSolicitudInCliente',
+            title: 'NewSolicitudInUsuario',
             exclude: ['id'],
-            optional: ['clienteId']
+            optional: ['usuarioId']
           }),
         },
       },
     }) solicitud: Omit<Solicitud, 'id'>,
   ): Promise<Solicitud> {
-    return this.clienteRepository.solicitudes(id).create(solicitud);
+    return this.usuarioRepository.solicitudes(id).create(solicitud);
   }
 
-  @patch('/clientes/{id}/solicituds', {
+  @patch('/usuarios/{id}/solicitudes', {
     responses: {
       '200': {
-        description: 'Cliente.Solicitud PATCH success count',
+        description: 'Usuario.Solicitud PATCH success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente'], voters: [basicAuthorization]})
   async patch(
     @param.path.string('id') id: string,
     @requestBody({
@@ -90,21 +99,23 @@ export class ClienteSolicitudController {
     solicitud: Partial<Solicitud>,
     @param.query.object('where', getWhereSchemaFor(Solicitud)) where?: Where<Solicitud>,
   ): Promise<Count> {
-    return this.clienteRepository.solicitudes(id).patch(solicitud, where);
+    return this.usuarioRepository.solicitudes(id).patch(solicitud, where);
   }
 
-  @del('/clientes/{id}/solicituds', {
+  @del('/usuarios/{id}/solicitudes', {
     responses: {
       '200': {
-        description: 'Cliente.Solicitud DELETE success count',
+        description: 'Usuario.Solicitud DELETE success count',
         content: {'application/json': {schema: CountSchema}},
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['cliente'], voters: [basicAuthorization]})
   async delete(
     @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(Solicitud)) where?: Where<Solicitud>,
   ): Promise<Count> {
-    return this.clienteRepository.solicitudes(id).delete(where);
+    return this.usuarioRepository.solicitudes(id).delete(where);
   }
 }
